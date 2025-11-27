@@ -43,21 +43,29 @@ function Tabs() {
         tabBarLabelStyle: {
           fontSize: s(12)
         },
+        headerTitleAlign: 'center',
+        headerTitleStyle: {
+          marginHorizontal: s(16) 
+        },
+        headerLeftContainerStyle: {
+          paddingLeft: s(8)
+        },
+        headerRightContainerStyle: {
+          paddingRight: s(10)
+        },
         headerLeft: () => (
           <BtnHistorico />
         ),
         headerRight: () => (
-          <View style={bs('w-75','me-1')}>
-            <Btn
-              childrenStyle={{
-                fontSize: s(10)
-              }}
-              color={Color.danger}
-              onPress={() => logout(navigation, dispatch)}
-            >
-              Sair
-            </Btn>
-          </View>
+          <Btn
+            childrenStyle={{
+              fontSize: s(10)
+            }}
+            color={Color.danger}
+            onPress={() => logout(navigation, dispatch)}
+          >
+            Sair
+          </Btn>
         )
       }}
     >

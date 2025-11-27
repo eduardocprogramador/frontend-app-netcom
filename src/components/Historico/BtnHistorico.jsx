@@ -3,7 +3,6 @@ import { Btn } from '../../../library/html'
 import { Color } from '../../../library/colors'
 import * as WebBrowser from "expo-web-browser"
 import api from '../../utils/api'
-import bs from '../../../library/bootstrap'
 import { vs, s } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 
@@ -15,9 +14,7 @@ const BtnHistorico = () => {
         await WebBrowser.openBrowserAsync(fullUrl)
     }
     return (
-        <View style={bs('w-75', 'ms-1')}>
-            <Btn childrenStyle={{ fontSize: s(10) }} onPress={handleHistorico} color={Color.primary}>Histórico</Btn>
-        </View>
+        <Btn childrenStyle={{ fontSize: s(10) }} onPress={handleHistorico} color={Color.primary}>Histórico</Btn>
     )
 }
 

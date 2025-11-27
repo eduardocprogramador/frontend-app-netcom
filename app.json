@@ -34,6 +34,12 @@
           "resizeMode": "contain"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ca8249f6-42f4-42a5-b741-dd68a4d430b8"
+      }
+    },
+    "owner": "weduardoc"
   }
 }
