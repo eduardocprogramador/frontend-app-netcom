@@ -29,7 +29,7 @@ export async function login(matricula, senha, navigation, dispatch, setLoading) 
       navigation.replace('Tabs')
       return true
     }
-    toast.error('Matrícula e/ou senha inválidas')
+    toast.error('Login e/ou senha inválidas')
     return false
   } catch (error) {
     toast.error('Erro. Tente mais tarde')

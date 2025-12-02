@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
             <Img src={IMAGES.logo} />
           </View>
         </View>
-        <InputText style={bs('mb-3')} value={matricula} onChangeText={setMatricula} placeholder='Matrícula' />
+        <InputText style={bs('mb-3')} value={matricula} onChangeText={setMatricula} placeholder='Login' />
         <InputPassword style={bs('mb-3')} value={senha} onChangeText={setSenha} placeholder='Senha' />
         <Btn
           style={bs('mb-3')}

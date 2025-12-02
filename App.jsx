@@ -18,8 +18,6 @@ import { useSelector } from 'react-redux';
 import { logout } from './src/utils/auth';
 import { Btn } from './library/html';
 import BtnHistorico from './src/components/Historico/BtnHistorico';
-import { View } from 'react-native';
-import bs from './library/bootstrap';
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()

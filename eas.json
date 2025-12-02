@@ -16,6 +16,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "educcarvalho@icloud.com",
+        "ascAppId": "6755973869",
+        "appleTeamId": "LWQAG9HUPY"
+      }
+    }
   }
 }

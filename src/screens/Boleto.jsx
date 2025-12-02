@@ -12,7 +12,7 @@ import { capitalize } from '../utils/capitalize'
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const Boleto = () => {
-  const [cpf, setCpf] = useState('')
+  /*const [cpf, setCpf] = useState('')
   const [nome, setNome] = useState('')
   const [uf, setUf] = useState('')
   const [cidade, setCidade] = useState('')
@@ -86,8 +86,13 @@ const Boleto = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }*/
   return (
+    <View style={bs('container','center')}>
+      <Text style={{fontSize: s(18)}}>Em breve</Text>
+    </View>
+  )
+  /*return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoid>
         <View style={bs('container')}>
@@ -147,7 +152,7 @@ const Boleto = () => {
         </View>
       </KeyboardAvoid>
     </TouchableWithoutFeedback>
-  )
+  )*/
 }
 
 export default Boleto
