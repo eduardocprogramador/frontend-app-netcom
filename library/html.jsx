@@ -1,9 +1,11 @@
-import { View, Text, StyleSheet, Pressable, TextInput, Image } from "react-native"
+import React from "react"
+import { View, Text, StyleSheet, Pressable, TextInput, Image, Animated } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Color } from "./colors"
 import { vs, s } from 'react-native-size-matters'
 import bs from "./bootstrap"
-import { Picker } from "@react-native-picker/picker"
+import { useState, useRef } from "react"
+import Entypo from '@expo/vector-icons/Entypo'
 
 export const H1 = ({ children, style }) => {
   return <Text style={[styles.h1, style]}>{children}</Text>
@@ -30,8 +32,8 @@ export const Btn = ({ children, color, onPress, style, childrenStyle, disabled =
   return (
     <View style={bs('w-100')}>
       <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
-        <View style={[styles.btn, style, 
-          { backgroundColor: color, opacity: disabled ? 0.5 : 1 }
+        <View style={[styles.btn, style,
+        { backgroundColor: color, opacity: disabled ? 0.5 : 1 }
         ]}>
           <Text style={[styles.btnText, childrenStyle]}>{children}</Text>
         </View>
@@ -100,31 +102,64 @@ export const TextArea = ({ value, onChangeText, rows, placeholder, style }) => {
   )
 }
 export const Option = ({ value, label, children }) => null
-export const Select = ({ children, value, onValueChange, placeholder = "Selecione", style }) => {
-  const options = React.Children.toArray(children).filter(child => child.type === Option)
+export const Select = ({ value, onChange, children, placeholder = "Selecione", style, textStyle, optionTextStyle }) => {
+  const [open, setOpen] = useState(false)
+  const rotateAnim = useRef(new Animated.Value(0)).current
+  const toggleOpen = () => {
+    const toValue = open ? 0 : 1
+    setOpen(!open)
+    Animated.timing(rotateAnim, {
+      toValue,
+      duration: 180,
+      useNativeDriver: true
+    }).start()
+  }
+  const rotate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "180deg"]
+  })
+  const optionElements = React.Children.toArray(children)
+  const options = optionElements
+    .map((child) => {
+      if (!React.isValidElement(child)) return null
+      return {
+        value: child.props.value,
+        label: child.props.children || child.props.label
+      }
+    })
+    .filter(Boolean)
+  const selectedLabel = options.find(o => o.value === value)?.label
   return (
-    <View style={[styles.formControl, style]}>
-      <Picker
-        selectedValue={value}
-        onValueChange={onValueChange}
-        style={styles.select}
-        dropdownIconColor="#6c757d"
+    <View style={style}>
+      <Pressable
+        onPress={toggleOpen}
+        style={styles.selectBox}
       >
-        {!value && (
-          <Picker.Item
-            label={placeholder}
-            value=""
-            color="#6c757d"
-          />
-        )}
-        {options.map((child) => (
-          <Picker.Item
-            key={child.props.value}
-            label={child.props.children}
-            value={child.props.value}
-          />
-        ))}
-      </Picker>
+        <Text style={[styles.selectText, textStyle]}>
+          {selectedLabel || placeholder}
+        </Text>
+        <Animated.View style={{ transform: [{ rotate }] }}>
+          <Entypo name="chevron-down" size={16} color="#6c757d" />
+        </Animated.View>
+      </Pressable>
+      {open && (
+        <View style={styles.options}>
+          {options.map(option => (
+            <Pressable
+              key={option.value}
+              onPress={() => {
+                onChange(option.value)
+                toggleOpen()
+              }}
+              style={styles.optionItem}
+            >
+              <Text style={[styles.optionText, optionTextStyle]}>
+                {option.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
     </View>
   )
 }
@@ -171,7 +206,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: "#fff",
-    fontSize: s(14),
+    fontSize: s(13),
     fontWeight: "bold"
   },
   pressed: {
@@ -193,11 +228,37 @@ const styles = StyleSheet.create({
     fontSize: s(14),
     backgroundColor: "#fff",
   },
-  select: {
+  selectBox: {
     width: "100%",
-    height: "100%",
+    height: vs(40),
+    borderWidth: s(1),
+    borderColor: "#ced4da",
+    borderRadius: s(6),
+    paddingHorizontal: s(10),
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  selectText: {
     fontSize: s(14),
-    fontWeight: 500,
+    color: "#333"
+  },
+  options: {
+    marginTop: s(4),
+    borderWidth: s(1),
+    borderColor: "#ced4da",
+    borderRadius: s(6),
+    backgroundColor: "#fff",
+    overflow: "hidden"
+  },
+  optionItem: {
+    paddingVertical: vs(10),
+    paddingHorizontal: s(10),
+  },
+  optionText: {
+    fontSize: s(14),
+    color: "#333"
   },
   imgFluid: {
     width: "100%",

@@ -26,7 +26,7 @@ export async function login(matricula, senha, navigation, dispatch, setLoading) 
     const partner_id = 112161
     if (uid) {
       dispatch(setUserData({ uid, partner_id }))
-      navigation.replace('Tabs')
+      navigation.replace('Screens')
       return true
     }
     toast.error('Login e/ou senha inválidas')

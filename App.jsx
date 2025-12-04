@@ -3,6 +3,7 @@ import Boleto from './src/screens/Boleto';
 import Login from './src/screens/Login';
 import Horario from './src/screens/Horario';
 import Aviso from './src/screens/Aviso';
+import Home from './src/screens/Home';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Color } from './library/colors';
@@ -20,7 +21,6 @@ import { Btn } from './library/html';
 import BtnHistorico from './src/components/Historico/BtnHistorico';
 
 const Stack = createStackNavigator()
-const Tab = createBottomTabNavigator()
 
 function AuthStack() {
   return (
@@ -31,64 +31,20 @@ function AuthStack() {
     </Stack.Navigator>
   )
 }
-function Tabs() {
-  const navigation = useNavigation()
-  const dispatch = useDispatch()
+function Screens() {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: Color.primary,
-        tabBarLabelStyle: {
-          fontSize: s(12)
-        },
-        headerTitleAlign: 'center',
-        headerTitleStyle: {
-          marginHorizontal: s(16) 
-        },
-        headerLeftContainerStyle: {
-          paddingLeft: s(8)
-        },
-        headerRightContainerStyle: {
-          paddingRight: s(10)
-        },
-        headerLeft: () => (
-          <BtnHistorico />
-        ),
-        headerRight: () => (
-          <Btn
-            childrenStyle={{
-              fontSize: s(10)
-            }}
-            color={Color.danger}
-            onPress={() => logout(navigation, dispatch)}
-          >
-            Sair
-          </Btn>
-        )
-      }}
-    >
-      <Tab.Screen name='Horários' component={Horario}
+    <Stack.Navigator screenOptions={{
+      headerBackTitle: 'Voltar'
+    }}>
+      <Stack.Screen name='Home' component={Home}
         options={{
-          tabBarIcon: ({ color, size }) => {
-            return <FontAwesome name="calendar" size={size} color={color} />
-          }
+          headerShown: false
         }}
       />
-      <Tab.Screen name='Boleto' component={Boleto}
-        options={{
-          tabBarIcon: ({ color, size }) => {
-            return <FontAwesome name="money" size={size} color={color} />
-          }
-        }}
-      />
-      <Tab.Screen name='Avisos' component={Aviso}
-        options={{
-          tabBarIcon: ({ color, size }) => {
-            return <FontAwesome name="bell" size={size} color={color} />
-          }
-        }}
-      />
-    </Tab.Navigator>
+      <Stack.Screen name='Horários' component={Horario} />
+      <Stack.Screen name='Boleto' component={Boleto} />
+      <Stack.Screen name='Avisos' component={Aviso} />
+    </Stack.Navigator>
   )
 }
 function MainStack() {
@@ -96,10 +52,10 @@ function MainStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={userData?.uid ? 'Tabs' : 'AuthStack'}
+      initialRouteName={userData?.uid ? 'Screens' : 'AuthStack'}
     >
       <Stack.Screen name='AuthStack' component={AuthStack} />
-      <Stack.Screen name='Tabs' component={Tabs} />
+      <Stack.Screen name='Screens' component={Screens} />
     </Stack.Navigator>
   )
 }
