@@ -27,7 +27,6 @@ const Horario = () => {
       } catch (error) {
         toast.error('Erro ao buscar os horários')
       }
-      setLoading(false)
     }
     async function getHorarioAluno() {
       const payload = { partner_id }
@@ -41,10 +40,10 @@ const Horario = () => {
       } catch (error) {
         toast.error('Erro ao buscar o horário')
       }
-      setLoading(false)
     }
     getHorariosDisponiveis()
     getHorarioAluno()
+    setLoading(false)
   }, [])
   async function getHorarioCodigoTurma() {
     const payload = { codigo: selectedOption }
