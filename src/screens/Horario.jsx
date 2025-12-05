@@ -14,37 +14,41 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 const Horario = () => {
   const [horario, setHorario] = useState([])
   const [turmas, setTurmas] = useState([])
-  const [codigo, setCodigo] = useState('')
-  const [curso, setCurso] = useState('')
   const [selectedOption, setSelectedOption] = useState('')
   const [loading, setLoading] = useState(true)
   const partner_id = useSelector(state => state.userReducer.userData?.partner_id)
+  async function getTurmaMatriculado() {
+    const payload = { partner_id }
+    try {
+      const { data } = await api.post("/app/turma_matriculado", payload)
+      setSelectedOption(data.codigo_turma)
+      return data.codigo_turma
+    } catch (error) {
+      toast.error('Erro ao buscar as turmas do aluno')
+      return null
+    }
+  }
   useEffect(() => {
-    async function getHorariosDisponiveis() {
+    async function init() {
       try {
-        const { data } = await api.post("/app/horarios_disponiveis")
-        setTurmas(data)
+        setLoading(true)
+        const { data: turmasData } = await api.post("/app/horarios_disponiveis")
+        setTurmas(turmasData)
+        const codigoTurma = await getTurmaMatriculado()
+        if (codigoTurma) {
+          const payload = { codigo: codigoTurma }
+          const { data } = await api.post("/app/horario_codigo_turma", payload)
+          const { horarios, curso_turma_codigo, curso_nome } = data
+          setHorario(horarios)
+        }
       } catch (error) {
-        toast.error('Erro ao buscar os horários')
+        toast.error('Erro ao carregar dados iniciais')
+      } finally {
+        setLoading(false)
       }
     }
-    async function getHorarioAluno() {
-      const payload = { partner_id }
-      try {
-        const { data } = await api.post("/app/horario_aluno", payload)
-        const { horarios, curso_turma_codigo, curso_nome } = data
-        setHorario(horarios)
-        setCodigo(curso_turma_codigo)
-        setCurso(curso_nome)
-        setSelectedOption(curso_turma_codigo)
-      } catch (error) {
-        toast.error('Erro ao buscar o horário')
-      }
-    }
-    getHorariosDisponiveis()
-    getHorarioAluno()
-    setLoading(false)
-  }, [])
+    init()
+  }, [partner_id])
   async function getHorarioCodigoTurma() {
     const payload = { codigo: selectedOption }
     setLoading(true)
@@ -52,13 +56,12 @@ const Horario = () => {
       const { data } = await api.post("/app/horario_codigo_turma", payload)
       const { horarios, curso_turma_codigo, curso_nome } = data
       setHorario(horarios)
-      setCodigo(curso_turma_codigo)
-      setCurso(curso_nome)
       setSelectedOption(curso_turma_codigo)
     } catch (error) {
       toast.error('Erro ao buscar o horário')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
   if (loading) {
     return (
