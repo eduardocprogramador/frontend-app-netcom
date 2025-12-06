@@ -10,32 +10,25 @@ import { toast } from "../utils/toast"
 import { Select, Option, Btn } from "../../library/html"
 import { Color } from "../../library/colors"
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { getTurmaMatriculado } from "../utils/getTurmaMatriculado"
 
 const Horario = () => {
   const [horario, setHorario] = useState([])
   const [turmas, setTurmas] = useState([])
+  const [turmaMatriculado, setTurmaMatriculado] = useState('')
   const [selectedOption, setSelectedOption] = useState('')
   const [loading, setLoading] = useState(true)
   const partner_id = useSelector(state => state.userReducer.userData?.partner_id)
-  async function getTurmaMatriculado() {
-    const payload = { partner_id }
-    try {
-      const { data } = await api.post("/app/turma_matriculado", payload)
-      setSelectedOption(data.codigo_turma)
-      return data.codigo_turma
-    } catch (error) {
-      toast.error('Erro ao buscar as turmas do aluno')
-      return null
-    }
-  }
   useEffect(() => {
     async function init() {
       try {
         setLoading(true)
         const { data: turmasData } = await api.post("/app/horarios_disponiveis")
         setTurmas(turmasData)
-        const codigoTurma = await getTurmaMatriculado()
+        const codigoTurma = await getTurmaMatriculado(partner_id)
         if (codigoTurma) {
+          setTurmaMatriculado(codigoTurma)
+          setSelectedOption(codigoTurma)
           const payload = { codigo: codigoTurma }
           const { data } = await api.post("/app/horario_codigo_turma", payload)
           const { horarios, curso_turma_codigo, curso_nome } = data
