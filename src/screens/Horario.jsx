@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View, Text } from "react-native"
+import { FlatList, StyleSheet, View } from "react-native"
 import api from "../utils/api"
 import { useState, useEffect } from "react"
 import Card from "../components/Horario/Card"
@@ -23,25 +23,29 @@ const Horario = () => {
     async function init() {
       try {
         setLoading(true)
+        // pega todas as turmas que possuem horários cadastrados
         const { data: turmasData } = await api.post("/app/horarios_disponiveis")
         setTurmas(turmasData)
+        // pega o código da turma do aluno logado
         const codigoTurma = await getTurmaMatriculado(partner_id)
         if (codigoTurma) {
           setTurmaMatriculado(codigoTurma)
           setSelectedOption(codigoTurma)
           const payload = { codigo: codigoTurma }
+          // pega o horário da turma do aluno
           const { data } = await api.post("/app/horario_codigo_turma", payload)
           const { horarios, curso_turma_codigo, curso_nome } = data
           setHorario(horarios)
         }
       } catch (error) {
-        toast.error('Erro ao carregar dados iniciais')
+        console.log(error)
       } finally {
         setLoading(false)
       }
     }
     init()
   }, [partner_id])
+  // busca o horário com base no código da turma selecionado
   async function getHorarioCodigoTurma() {
     const payload = { codigo: selectedOption }
     setLoading(true)

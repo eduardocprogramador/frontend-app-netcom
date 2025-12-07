@@ -1,5 +1,6 @@
 import api from "./api"
 
+// pega a turma que o aluno está matriculado com base no id
 export async function getTurmaMatriculado(partner_id) {
     const payload = { partner_id }
     try {

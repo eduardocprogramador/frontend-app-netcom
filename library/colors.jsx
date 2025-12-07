@@ -7,7 +7,4 @@ export const Color = {
     info: "#0dcaf0",
     light: "#f8f9fa",
     dark: "#212529",
-    // Cores do App
-    blue: "#16479D",
-    lightGray: "#EEE"
 }

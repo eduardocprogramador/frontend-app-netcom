@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import bs from '../../library/bootstrap'
 import { useState } from 'react'
-import { Btn, Img, InputPassword, InputText, A } from '../../library/html'
+import { Btn, Img, InputPassword, InputText } from '../../library/html'
 import { Color } from '../../library/colors'
 import { login } from '../utils/auth'
 import { IMAGES } from '../utils/images'

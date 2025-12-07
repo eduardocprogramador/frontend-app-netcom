@@ -87,7 +87,6 @@ const bootstrapStyles = () => {
     alignItems: "center"
   }
   styles["flex-1"] = { flex: 1 }
-  styles["mt-20p"] = { marginTop: "20%" }
   styles["elevation"] = {
     shadowColor: "#000",
     shadowOpacity: 0.08,

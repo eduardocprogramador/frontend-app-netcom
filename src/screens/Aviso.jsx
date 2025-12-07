@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from "react-native"
+import { FlatList, StyleSheet, View } from "react-native"
 import api from "../utils/api"
 import { useState, useEffect } from "react"
 import Card from "../components/Aviso/Card"
@@ -23,13 +23,16 @@ const Aviso = () => {
     async function init() {
       try {
         setLoading(true)
+        // pega todas as turmas que possuem horários cadastrados
         const { data: turmasData } = await api.post("/app/horarios_disponiveis")
         setTurmas(turmasData)
+        // pega o código da turma do aluno logado
         const codigoTurma = await getTurmaMatriculado(partner_id)
         if (codigoTurma) {
           setTurmaMatriculado(codigoTurma)
           setSelectedOption(codigoTurma)
           const payloadAvisos = { codigo: codigoTurma }
+          // pega os avisos da turma do aluno
           const { data: avisosData } = await api.post("/app/aviso_codigo_turma", payloadAvisos)
           setAvisos(avisosData)
         }

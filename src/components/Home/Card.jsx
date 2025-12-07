@@ -1,5 +1,6 @@
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { vs, s } from 'react-native-size-matters'
 
 const Card = ({ text, icon, color, onPress, disabled }) => {
   return (
@@ -12,7 +13,7 @@ const Card = ({ text, icon, color, onPress, disabled }) => {
       ]}
     >
       <View style={styles.iconBox}>
-        <FontAwesome name={icon} size={28} color={color} />
+        <FontAwesome name={icon} size={s(28)} color={color} />
       </View>
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
@@ -22,18 +23,18 @@ const Card = ({ text, icon, color, onPress, disabled }) => {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    minHeight: 120,
-    borderWidth: 1.5,
-    borderRadius: 12,
-    padding: 12,
+    minHeight: vs(120),
+    borderWidth: s(1.5),
+    borderRadius: s(12),
+    padding: s(12),
     justifyContent: 'center',
     alignItems: 'center'
   },
   iconBox: {
-    marginBottom: 8
+    marginBottom: vs(8)
   },
   text: {
-    fontSize: 16,
+    fontSize: s(16),
     fontWeight: '600'
   }
 })

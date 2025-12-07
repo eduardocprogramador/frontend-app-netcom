@@ -1,4 +1,4 @@
-import { StyleSheet, View, FlatList } from 'react-native'
+import { StyleSheet, FlatList } from 'react-native'
 import Card from '../components/Home/Card'
 import bs from '../../library/bootstrap'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -24,7 +24,7 @@ const cards = [
   },
   {
     id: '3',
-    text: 'Avisos',
+    text: 'Avisos (Em Breve)',
     icon: 'bell-o',
     color: '#dc2626'
   },
@@ -52,8 +52,10 @@ const Home = ({ navigation }) => {
             text={item.text}
             icon={item.icon}
             color={item.color}
-            disabled={item.text == 'Boleto (Em Breve)'}
+            // Boleto e Avisos desabilitados por enquanto
+            disabled={item.text == 'Boleto (Em Breve)' || item.text == 'Avisos (Em Breve)'}
             onPress={
+              // se for Histórico chama a função handleHistorico
               item.text != 'Histórico' ? (
                 () => navigation.navigate(item.text)
               ) : (

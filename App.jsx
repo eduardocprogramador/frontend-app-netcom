@@ -4,21 +4,14 @@ import Login from './src/screens/Login';
 import Horario from './src/screens/Horario';
 import Aviso from './src/screens/Aviso';
 import Home from './src/screens/Home';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Color } from './library/colors';
-import { vs, s } from 'react-native-size-matters'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Provider, useDispatch } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from 'react-redux';
 import { persistor, store } from './src/redux/store';
 import Toast from 'react-native-toast-message'
 import { createStackNavigator } from '@react-navigation/stack';
 import { PersistGate } from 'redux-persist/integration/react'
 import Loading from './src/components/Loading';
 import { useSelector } from 'react-redux';
-import { logout } from './src/utils/auth';
-import { Btn } from './library/html';
-import BtnHistorico from './src/components/Historico/BtnHistorico';
 
 const Stack = createStackNavigator()
 

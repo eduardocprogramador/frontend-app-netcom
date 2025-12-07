@@ -21,6 +21,7 @@ const Boleto = () => {
   const [endereco, setEndereco] = useState('')
   const [loading, setLoading] = useState(false)
   useEffect(() => {
+    // recupera o que o usuário já digitou
     async function loadForm() {
       try {
         const json = await AsyncStorage.getItem('boleto_form')
@@ -41,6 +42,7 @@ const Boleto = () => {
     loadForm()
   }, [])
   useEffect(() => {
+    // salva localmente o que o usuário digitou
     async function saveForm() {
       try {
         const data = {

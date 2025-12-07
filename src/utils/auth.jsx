@@ -22,8 +22,12 @@ export async function login(matricula, senha, navigation, dispatch, setLoading) 
     }
     const { data } = await odoo.post('/web/session/authenticate', payload)
     const uid = data?.result?.uid
-    //const partner_id = data?.result?.partner_id
-    const partner_id = 112161
+    let partner_id
+    if(uid == 229) {  // se for o login de teste 
+      partner_id = 112161
+    } else {
+      partner_id = data?.result?.partner_id
+    }
     if (uid) {
       dispatch(setUserData({ uid, partner_id }))
       navigation.replace('Screens')
