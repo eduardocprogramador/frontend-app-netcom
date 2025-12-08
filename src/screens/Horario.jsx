@@ -11,6 +11,7 @@ import { Select, Option, Btn } from "../../library/html"
 import { Color } from "../../library/colors"
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { getTurmaMatriculado } from "../utils/getTurmaMatriculado"
+import Title from "../components/Title"
 
 const Horario = () => {
   const [horario, setHorario] = useState([])
@@ -38,7 +39,7 @@ const Horario = () => {
           setHorario(horarios)
         }
       } catch (error) {
-        console.log(error)
+        setHorario(null)
       } finally {
         setLoading(false)
       }
@@ -83,22 +84,28 @@ const Horario = () => {
           </Btn>
         </View>
       </View>
-      <FlatList
-        data={horario}
-        keyExtractor={(value) => value.dia_index}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <Card
-            style={styles.card}
-            dia_semana={item.dia_semana}
-            hora_inicio={item.hora_inicio}
-            hora_termino={item.hora_termino}
-            disciplina={item.disciplina}
-            professor={item.professor}
-            sala={item.sala}
-          />
-        )}
-      />
+      {horario == null ? (
+        <View style={bs('container', 'center')}>
+          <Title>Selecione uma turma</Title>
+        </View>
+      ) : (
+        <FlatList
+          data={horario}
+          keyExtractor={(value) => value.dia_index}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <Card
+              style={styles.card}
+              dia_semana={item.dia_semana}
+              hora_inicio={item.hora_inicio}
+              hora_termino={item.hora_termino}
+              disciplina={item.disciplina}
+              professor={item.professor}
+              sala={item.sala}
+            />
+          )}
+        />
+      )}
     </View>
   )
 }
