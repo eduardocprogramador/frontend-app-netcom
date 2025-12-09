@@ -1,8 +1,7 @@
 import axios from "axios"
-import { API } from '@env'
 
 const api = axios.create({
-  baseURL: API
+  baseURL: "https://backend-app-netcom.vercel.app/"
 })
 
 export default api

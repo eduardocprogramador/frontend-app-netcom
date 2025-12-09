@@ -1,8 +1,7 @@
 import { toast } from './toast'
-import odoo from './odoo'
 import { setUserData } from '../redux/reducers/userReducer'
 import { persistor } from '../redux/store'
-import { DB_ODOO } from '@env'
+import api from './api'
 
 export async function login(matricula, senha, navigation, dispatch, setLoading) {
   if (matricula == '' || senha == '') {
@@ -11,23 +10,8 @@ export async function login(matricula, senha, navigation, dispatch, setLoading) 
   }
   setLoading(true)
   try {
-    const payload = {
-      jsonrpc: "2.0",
-      method: "call",
-      params: {
-        db: DB_ODOO,
-        login: matricula,
-        password: senha,
-      },
-    }
-    const { data } = await odoo.post('/web/session/authenticate', payload)
-    const uid = data?.result?.uid
-    let partner_id
-    if(uid == 229) {  // se for o login de teste 
-      partner_id = 112161
-    } else {
-      partner_id = data?.result?.partner_id
-    }
+    const { data } = await api.post('/app/login', { matricula, senha })
+    const { uid, partner_id } = data
     if (uid) {
       dispatch(setUserData({ uid, partner_id }))
       navigation.replace('Screens')
