@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import bs from '../../library/bootstrap'
-import { InputNumber, InputText, Btn } from '../../library/html'
+import { InputNumber, InputText, Btn, InputCPF, InputCEP } from '../../library/html'
 import { useState, useEffect } from 'react'
 import { vs, s } from 'react-native-size-matters'
 import { Color } from '../../library/colors'
@@ -75,7 +75,7 @@ const Boleto = () => {
         cep,
         cidade,
         bairro,
-        uf
+        uf: uf.toUpperCase().trim()
       }
     }
     setLoading(true)
@@ -84,8 +84,9 @@ const Boleto = () => {
       if (!data?.urlImagemBoleto) return
       await WebBrowser.openBrowserAsync(data.urlImagemBoleto)
     } catch (error) {
-      toast.error('Erro ao gerar boleto')
-    } finally {
+      toast.error("Erro ao gerar boleto")
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -94,11 +95,9 @@ const Boleto = () => {
       <KeyboardAvoid>
         <View style={bs('container')}>
           <Text style={styles.title}>Preencha os dados para gerar o boleto da matrícula</Text>
-          <InputNumber
+          <InputCPF
             value={cpf}
             onChangeText={setCpf}
-            placeholder='CPF'
-            maxLength={11}
             style={bs('mb-3')}
           />
           <InputText
@@ -125,11 +124,9 @@ const Boleto = () => {
             placeholder='Bairro'
             style={bs('mb-3')}
           />
-          <InputNumber
+          <InputCEP
             value={cep}
             onChangeText={setCep}
-            placeholder='CEP'
-            maxLength={8}
             style={bs('mb-3')}
           />
           <InputText

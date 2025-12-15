@@ -86,6 +86,52 @@ export const InputNumber = ({ value, onChangeText, maxLength, placeholder, style
     />
   )
 }
+export const InputCPF = ({
+  value,
+  onChangeText,
+  placeholder = 'CPF',
+  style
+}) => {
+  const handleChange = (text) => {
+    const onlyNumbers = text.replace(/\D/g, '')
+    onChangeText(onlyNumbers)
+  }
+  return (
+    <TextInput
+      style={[styles.formControl, style]}
+      value={value}
+      onChangeText={handleChange}
+      placeholder={placeholder}
+      keyboardType="number-pad"
+      maxLength={11}
+      autoCapitalize="none"
+      autoCorrect={false}
+    />
+  )
+}
+export const InputCEP = ({
+  value,
+  onChangeText,
+  placeholder = 'CEP',
+  style
+}) => {
+  const handleChange = (text) => {
+    const onlyNumbers = text.replace(/\D/g, '')
+    onChangeText(onlyNumbers)
+  }
+  return (
+    <TextInput
+      style={[styles.formControl, style]}
+      value={value}
+      onChangeText={handleChange}
+      placeholder={placeholder}
+      keyboardType="number-pad"
+      maxLength={8}
+      autoCapitalize="none"
+      autoCorrect={false}
+    />
+  )
+}
 export const TextArea = ({ value, onChangeText, rows, placeholder, style }) => {
   return (
     <TextInput

@@ -24,15 +24,15 @@ const cards = [
   },
   {
     id: '3',
-    text: 'Avisos (Em Breve)',
-    icon: 'bell-o',
-    color: '#dc2626'
+    text: 'Boleto',
+    icon: 'money',
+    color: '#f59e0b'
   },
   {
     id: '4',
-    text: 'Boleto (Em Breve)',
-    icon: 'money',
-    color: '#f59e0b'
+    text: 'Avisos (Em Breve)',
+    icon: 'bell-o',
+    color: '#dc2626'
   }
 ]
 
@@ -52,8 +52,8 @@ const Home = ({ navigation }) => {
             text={item.text}
             icon={item.icon}
             color={item.color}
-            // Boleto e Avisos desabilitados por enquanto
-            disabled={item.text == 'Boleto (Em Breve)' || item.text == 'Avisos (Em Breve)'}
+            // Avisos desabilitados por enquanto
+            disabled={item.text == 'Avisos (Em Breve)'}
             onPress={
               // se for Histórico chama a função handleHistorico
               item.text != 'Histórico' ? (
