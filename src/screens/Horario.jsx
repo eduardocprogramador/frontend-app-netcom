@@ -7,7 +7,7 @@ import bs from "../../library/bootstrap"
 import Loading from "../components/Loading"
 import { useSelector } from "react-redux"
 import { toast } from "../utils/toast"
-import { Select, Option, Btn } from "../../library/html"
+import { Select, Option, Btn, SelectSearch } from "../../library/html"
 import { Color } from "../../library/colors"
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { getTurmaMatriculado } from "../utils/getTurmaMatriculado"
@@ -70,16 +70,24 @@ const Horario = () => {
     <View style={bs('container')}>
       <View style={bs('row', 'my-1')}>
         <View style={bs('flex-1')}>
-          <Select value={selectedOption} onChange={setSelectedOption} textStyle={{ fontSize: s(10) }} optionTextStyle={{ fontSize: s(10) }}>
-            {turmas.map((item, index) => (
-              <Option value={item.curso_turma}>
-                [{item.curso_turma}] - {item.curso}
-              </Option>
-            ))}
-          </Select>
+          <SelectSearch
+            value={selectedOption}
+            onChange={(item) => setSelectedOption(item.value)}
+            options={turmas.map((t) => ({
+              value: t.curso_turma,
+              label: `[${t.curso_turma}] - ${t.curso}`,
+            }))}
+            inputStyle={{ fontSize: s(10) }}
+            optionTextStyle={{ fontSize: s(10) }}
+          />
         </View>
         <View>
-          <Btn color={Color.primary} style={bs('px-2')} onPress={getHorarioCodigoTurma}>
+          <Btn 
+            color={Color.primary} 
+            style={bs('px-2')} 
+            onPress={getHorarioCodigoTurma}
+            disabled={!selectedOption}
+          >
             <FontAwesome name="search" size={s(16)} color="white" />
           </Btn>
         </View>

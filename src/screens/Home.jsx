@@ -30,7 +30,7 @@ const cards = [
   },
   {
     id: '4',
-    text: 'Avisos (Em Breve)',
+    text: 'Avisos',
     icon: 'bell-o',
     color: '#dc2626'
   }
@@ -53,7 +53,7 @@ const Home = ({ navigation }) => {
             icon={item.icon}
             color={item.color}
             // Avisos desabilitados por enquanto
-            disabled={item.text == 'Avisos (Em Breve)'}
+            // disabled={item.text == 'Avisos (Em Breve)'}
             onPress={
               // se for Histórico chama a função handleHistorico
               item.text != 'Histórico' ? (

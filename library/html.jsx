@@ -1,10 +1,10 @@
 import React from "react"
-import { View, Text, StyleSheet, Pressable, TextInput, Image, Animated } from "react-native"
+import { View, Text, StyleSheet, Pressable, FlatList, TextInput, Image, Animated } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Color } from "./colors"
 import { vs, s } from 'react-native-size-matters'
 import bs from "./bootstrap"
-import { useState, useRef } from "react"
+import { useState, useRef, useMemo } from "react"
 import Entypo from '@expo/vector-icons/Entypo'
 
 export const H1 = ({ children, style }) => {
@@ -86,52 +86,6 @@ export const InputNumber = ({ value, onChangeText, maxLength, placeholder, style
     />
   )
 }
-export const InputCPF = ({
-  value,
-  onChangeText,
-  placeholder = 'CPF',
-  style
-}) => {
-  const handleChange = (text) => {
-    const onlyNumbers = text.replace(/\D/g, '')
-    onChangeText(onlyNumbers)
-  }
-  return (
-    <TextInput
-      style={[styles.formControl, style]}
-      value={value}
-      onChangeText={handleChange}
-      placeholder={placeholder}
-      keyboardType="number-pad"
-      maxLength={11}
-      autoCapitalize="none"
-      autoCorrect={false}
-    />
-  )
-}
-export const InputCEP = ({
-  value,
-  onChangeText,
-  placeholder = 'CEP',
-  style
-}) => {
-  const handleChange = (text) => {
-    const onlyNumbers = text.replace(/\D/g, '')
-    onChangeText(onlyNumbers)
-  }
-  return (
-    <TextInput
-      style={[styles.formControl, style]}
-      value={value}
-      onChangeText={handleChange}
-      placeholder={placeholder}
-      keyboardType="number-pad"
-      maxLength={8}
-      autoCapitalize="none"
-      autoCorrect={false}
-    />
-  )
-}
 export const TextArea = ({ value, onChangeText, rows, placeholder, style }) => {
   return (
     <TextInput
@@ -204,6 +158,94 @@ export const Select = ({ value, onChange, children, placeholder = "Selecione", s
               </Text>
             </Pressable>
           ))}
+        </View>
+      )}
+    </View>
+  )
+}
+function normalizeText(text = "") {
+  return String(text)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos
+    .toLowerCase()
+    .trim()
+}
+export function SelectSearch({
+  value,
+  onChange,
+  options = [],
+  placeholder = "",
+  style,
+  inputStyle,
+  optionTextStyle,
+  maxVisible = 6,
+}) {
+  const [query, setQuery] = useState("")
+  const [open, setOpen] = useState(false)
+  const inputRef = useRef(null)
+
+  // label selecionado (quando value vem de fora)
+  const selectedLabel = useMemo(() => {
+    return options.find(o => o.value === value)?.label || ""
+  }, [value, options])
+
+  // o que aparece no input: se está digitando, mostra query; se não, mostra selecionado
+  const inputValue = open ? query : (selectedLabel || query)
+
+  const filtered = useMemo(() => {
+    const q = normalizeText(query.trim())
+    if (!q) return options
+    return options.filter(o =>
+      normalizeText(o.label).includes(q)
+    )
+  }, [query, options])
+
+  function handleSelect(item) {
+    onChange?.(item)
+    setQuery("")       // limpa a busca (opcional)
+    setOpen(false)     // fecha lista
+  }
+
+  return (
+    <View style={[style, { position: "relative" }]}>
+      <TextInput
+        ref={inputRef}
+        style={[styles.formControl, inputStyle]}
+        value={inputValue}
+        placeholder={placeholder}
+        autoCapitalize="none"
+        autoCorrect={false}
+        onFocus={() => setOpen(true)}
+        onBlur={() => {
+          // dá um tempinho pro clique na opção funcionar antes de fechar
+          setTimeout(() => setOpen(false), 120)
+        }}
+        onChangeText={(t) => {
+          setQuery(t)
+          setOpen(true)
+        }}
+      />
+
+      {open && filtered.length > 0 && (
+        <View style={[styles.dropdown, { maxHeight: vs(40) * maxVisible }]}>
+          <FlatList
+            keyboardShouldPersistTaps="handled"
+            data={filtered}
+            keyExtractor={(item) => String(item.value)}
+            renderItem={({ item }) => (
+              <Pressable onPress={() => handleSelect(item)} style={styles.optionItem}>
+                <Text style={[styles.optionText, optionTextStyle]}>{item.label}</Text>
+              </Pressable>
+            )}
+          />
+        </View>
+      )}
+
+      {open && filtered.length === 0 && (
+        <View style={styles.dropdown}>
+          <Text style={[styles.optionText, { padding: s(10), color: "#6c757d" }]}>
+            Nenhuma opção encontrada
+          </Text>
         </View>
       )}
     </View>
@@ -297,6 +339,19 @@ const styles = StyleSheet.create({
     borderRadius: s(6),
     backgroundColor: "#fff",
     overflow: "hidden"
+  },
+  dropdown: {
+    position: "absolute",
+    top: vs(44),
+    left: 0,
+    right: 0,
+    borderWidth: s(1),
+    borderColor: "#ced4da",
+    borderRadius: s(6),
+    backgroundColor: "#fff",
+    overflow: "hidden",
+    zIndex: 999,
+    elevation: 10,
   },
   optionItem: {
     paddingVertical: vs(10),

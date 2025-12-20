@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import bs from '../../library/bootstrap'
-import { InputNumber, InputText, Btn, InputCPF, InputCEP } from '../../library/html'
+import { InputText, Btn, InputCPF, InputCEP } from '../../library/html'
 import { useState, useEffect } from 'react'
 import { vs, s } from 'react-native-size-matters'
 import { Color } from '../../library/colors'
