@@ -72,7 +72,7 @@ const Horario = () => {
         <View style={bs('flex-1')}>
           <SelectSearch
             value={selectedOption}
-            onChange={(item) => setSelectedOption(item.value)}
+            onChange={(item) => setSelectedOption(item?.value || "")}
             options={turmas.map((t) => ({
               value: t.curso_turma,
               label: `[${t.curso_turma}] - ${t.curso}`,

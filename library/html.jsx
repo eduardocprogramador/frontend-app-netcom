@@ -31,7 +31,7 @@ export const P = ({ children, style }) => {
 export const Btn = ({ children, color, onPress, style, childrenStyle, disabled = false }) => {
   return (
     <View style={bs('w-100')}>
-      <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
+      <Pressable disabled={disabled} onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
         <View style={[styles.btn, style,
         { backgroundColor: color, opacity: disabled ? 0.5 : 1 }
         ]}>
@@ -182,47 +182,39 @@ export function SelectSearch({
 }) {
   const [query, setQuery] = useState("")
   const [open, setOpen] = useState(false)
-  const inputRef = useRef(null)
 
-  // label selecionado (quando value vem de fora)
   const selectedLabel = useMemo(() => {
     return options.find(o => o.value === value)?.label || ""
   }, [value, options])
 
-  // o que aparece no input: se está digitando, mostra query; se não, mostra selecionado
   const inputValue = open ? query : (selectedLabel || query)
 
   const filtered = useMemo(() => {
     const q = normalizeText(query.trim())
     if (!q) return options
-    return options.filter(o =>
-      normalizeText(o.label).includes(q)
-    )
+    return options.filter(o => normalizeText(o.label).includes(q))
   }, [query, options])
 
   function handleSelect(item) {
-    onChange?.(item)
-    setQuery("")       // limpa a busca (opcional)
-    setOpen(false)     // fecha lista
+    onChange?.(item)   
+    setQuery("")
+    setOpen(false)
   }
 
   return (
     <View style={[style, { position: "relative" }]}>
       <TextInput
-        ref={inputRef}
         style={[styles.formControl, inputStyle]}
         value={inputValue}
         placeholder={placeholder}
         autoCapitalize="none"
         autoCorrect={false}
         onFocus={() => setOpen(true)}
-        onBlur={() => {
-          // dá um tempinho pro clique na opção funcionar antes de fechar
-          setTimeout(() => setOpen(false), 120)
-        }}
+        onBlur={() => setTimeout(() => setOpen(false), 120)}
         onChangeText={(t) => {
           setQuery(t)
           setOpen(true)
+          onChange?.(null) 
         }}
       />
 
@@ -234,7 +226,9 @@ export function SelectSearch({
             keyExtractor={(item) => String(item.value)}
             renderItem={({ item }) => (
               <Pressable onPress={() => handleSelect(item)} style={styles.optionItem}>
-                <Text style={[styles.optionText, optionTextStyle]}>{item.label}</Text>
+                <Text style={[styles.optionText, optionTextStyle]}>
+                  {item.label}
+                </Text>
               </Pressable>
             )}
           />
