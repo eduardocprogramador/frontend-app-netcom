@@ -16,6 +16,7 @@
     "axios": "^1.12.2",
     "buffer": "^6.0.3",
     "expo": "~54.0.27",
+    "expo-clipboard": "^8.0.8",
     "expo-file-system": "~19.0.20",
     "expo-intent-launcher": "~13.0.8",
     "expo-print": "~15.0.8",

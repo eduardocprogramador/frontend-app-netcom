@@ -7,7 +7,7 @@ import bs from "../../library/bootstrap"
 import Loading from "../components/Loading"
 import { useSelector } from "react-redux"
 import { toast } from "../utils/toast"
-import { Select, Option, Btn, SelectSearch } from "../../library/html"
+import { Btn, SelectSearch } from "../../library/html"
 import { Color } from "../../library/colors"
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { getTurmaMatriculado } from "../utils/getTurmaMatriculado"
@@ -124,11 +124,5 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: vs(8),
     marginTop: vs(8),
-  },
-  text: {
-    marginVertical: vs(10),
-    fontWeight: 600,
-    textAlign: 'center',
-    fontSize: s(13)
   }
 })

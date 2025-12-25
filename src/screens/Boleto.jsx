@@ -1,160 +1,77 @@
-import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import bs from '../../library/bootstrap'
-import { InputText, Btn, InputCPF, InputCEP } from '../../library/html'
-import { useState, useEffect } from 'react'
+import { FlatList, StyleSheet, View } from "react-native"
+import api from "../utils/api"
+import { useState, useEffect } from "react"
+import Card from "../components/Boleto/Card"
 import { vs, s } from 'react-native-size-matters'
-import { Color } from '../../library/colors'
-import KeyboardAvoid from '../components/KeyboardAvoid'
-import * as WebBrowser from 'expo-web-browser'
-import api from '../utils/api'
-import { toast } from '../utils/toast'
-import { capitalize } from '../utils/capitalize'
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import bs from "../../library/bootstrap"
+import Loading from "../components/Loading"
+import { useSelector } from "react-redux"
+import Title from "../components/Title"
 
 const Boleto = () => {
-  const [cpf, setCpf] = useState('')
-  const [nome, setNome] = useState('')
-  const [uf, setUf] = useState('')
-  const [cidade, setCidade] = useState('')
-  const [bairro, setBairro] = useState('')
-  const [cep, setCep] = useState('')
-  const [endereco, setEndereco] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [boletosNumero, setBoletosNumero] = useState([])
+  const [boletos, setBoletos] = useState([])
+  const [loading, setLoading] = useState(true)
+  const partner_id = useSelector(state => state.userReducer.userData?.partner_id)
   useEffect(() => {
-    // recupera o que o usuário já digitou
-    async function loadForm() {
+    async function init() {
       try {
-        const json = await AsyncStorage.getItem('boleto_form')
-        if (json) {
-          const data = JSON.parse(json)
-          setCpf(data.cpf || '')
-          setNome(data.nome || '')
-          setUf(data.uf || '')
-          setCidade(data.cidade || '')
-          setBairro(data.bairro || '')
-          setCep(data.cep || '')
-          setEndereco(data.endereco || '')
-        }
+        setLoading(true)
+        // pega todos os identificadores dos boletos do Banco do Brasil do aluno
+        const { data: boletosNumeroBB } = await api.get(`/app/boletos?partner_id=${partner_id}`)
+        setBoletosNumero(boletosNumeroBB)
+        const detalhes = await Promise.all(
+          boletosNumeroBB.map(async (numero) => {
+            const { data } = await api.get(`/app/boleto/${numero}`)
+            return data
+          })
+        )
+        setBoletos(detalhes)
       } catch (error) {
-        console.log('Erro ao carregar formulário do boleto:', error)
+        setBoletos(null)
+      } finally {
+        setLoading(false)
       }
     }
-    loadForm()
-  }, [])
-  useEffect(() => {
-    // salva localmente o que o usuário digitou
-    async function saveForm() {
-      try {
-        const data = {
-          cpf,
-          nome,
-          uf,
-          cidade,
-          bairro,
-          cep,
-          endereco
-        }
-        await AsyncStorage.setItem('boleto_form', JSON.stringify(data))
-      } catch (error) {
-        console.log('Erro ao salvar formulário do boleto:', error)
-      }
-    }
-    saveForm()
-  }, [cpf, nome, uf, cidade, bairro, cep, endereco])
-  async function handleBoleto() {
-    if (cpf == '' || nome == '' || uf == '' || cidade == '' || bairro == '' || cep == '' || endereco == '') {
-      toast.error('Preencha todos os campos')
-      return
-    }
-    const payload = {
-      pagador: {
-        tipoInscricao: 1,
-        numeroInscricao: cpf,
-        nome: capitalize(nome),
-        endereco,
-        cep,
-        cidade,
-        bairro,
-        uf: uf.toUpperCase().trim()
-      }
-    }
-    setLoading(true)
-    try {
-      const { data } = await api.post("/app/boleto", payload)
-      if (!data?.urlImagemBoleto) return
-      await WebBrowser.openBrowserAsync(data.urlImagemBoleto)
-    } catch (error) {
-      toast.error("Erro ao gerar boleto")
-    }
-    finally {
-      setLoading(false)
-    }
+    init()
+  }, [partner_id])
+  if (loading) {
+    return (
+      <Loading />
+    )
   }
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoid>
-        <View style={bs('container')}>
-          <Text style={styles.title}>Preencha os dados para gerar o boleto da matrícula</Text>
-          <InputCPF
-            value={cpf}
-            onChangeText={setCpf}
-            style={bs('mb-3')}
-          />
-          <InputText
-            value={nome}
-            onChangeText={setNome}
-            placeholder='Nome Completo'
-            style={bs('mb-3')}
-          />
-          <InputText
-            value={uf}
-            onChangeText={setUf}
-            placeholder='UF'
-            style={bs('mb-3')}
-          />
-          <InputText
-            value={cidade}
-            onChangeText={setCidade}
-            placeholder='Cidade'
-            style={bs('mb-3')}
-          />
-          <InputText
-            value={bairro}
-            onChangeText={setBairro}
-            placeholder='Bairro'
-            style={bs('mb-3')}
-          />
-          <InputCEP
-            value={cep}
-            onChangeText={setCep}
-            style={bs('mb-3')}
-          />
-          <InputText
-            value={endereco}
-            onChangeText={setEndereco}
-            placeholder='Endereço'
-            style={bs('mb-3')}
-          />
-          <Btn
-            style={bs('mb-5')}
-            color={Color.primary}
-            onPress={handleBoleto}
-            disabled={loading}
-          >
-            {loading ? 'Gerando...' : 'Gerar Boleto'}
-          </Btn>
+    <View style={bs('container')}>
+      {boletos == null ? (
+        <View style={bs('container', 'center')}>
+          <Title>Nenhum boleto pendente</Title>
         </View>
-      </KeyboardAvoid>
-    </TouchableWithoutFeedback>
+      ) : (
+        <FlatList
+          data={boletos}
+          keyExtractor={(value) => value.numeroBoletoBB}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <Card
+              style={styles.card}
+              status="ABERTO"
+              vencimento={item.vencimento}
+              valor={item.valor}
+              linhaDigitavel={item.linhaDigitavel}
+              pagador={item.pagador}
+            />
+          )}
+        />
+      )}
+    </View>
   )
 }
 
 export default Boleto
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: s(16),
-    marginTop: vs(10),
-    marginBottom: vs(12)
+  card: {
+    marginBottom: vs(8),
+    marginTop: vs(8),
   }
 })

@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import { vs, s } from 'react-native-size-matters'
 import bs from '../../../library/bootstrap'
 import Badge from '../Badge'
-import Label from './Label'
+import Label from '../Label'
 import Title from '../Title'
 
 const Card = ({ dia_semana, hora_inicio, hora_termino, disciplina, professor, sala, style }) => {
