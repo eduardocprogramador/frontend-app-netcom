@@ -101,6 +101,18 @@ export const TextArea = ({ value, onChangeText, rows, placeholder, style }) => {
     />
   )
 }
+export const InputCPF = ({ value, onChangeText, placeholder = "CPF", style }) => {
+  return (
+    <TextInput
+      style={[styles.formControl, style]}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      keyboardType="number-pad"
+      maxLength={11}
+    />
+  )
+}
 export const Option = ({ value, label, children }) => null
 export const Select = ({ value, onChange, children, placeholder = "Selecione", style, textStyle, optionTextStyle }) => {
   const [open, setOpen] = useState(false)
@@ -196,7 +208,7 @@ export function SelectSearch({
   }, [query, options])
 
   function handleSelect(item) {
-    onChange?.(item)   
+    onChange?.(item)
     setQuery("")
     setOpen(false)
   }
@@ -214,7 +226,7 @@ export function SelectSearch({
         onChangeText={(t) => {
           setQuery(t)
           setOpen(true)
-          onChange?.(null) 
+          onChange?.(null)
         }}
       />
 

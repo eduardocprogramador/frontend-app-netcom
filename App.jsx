@@ -12,6 +12,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { PersistGate } from 'redux-persist/integration/react'
 import Loading from './src/components/Loading';
 import { useSelector } from 'react-redux';
+import Historico from './src/screens/Historico';
 
 const Stack = createStackNavigator()
 
@@ -37,6 +38,7 @@ function Screens() {
       <Stack.Screen name='Horários' component={Horario} />
       <Stack.Screen name='Boleto' component={Boleto} />
       <Stack.Screen name='Avisos' component={Aviso} />
+      <Stack.Screen name='Historico' component={Historico} />
     </Stack.Navigator>
   )
 }

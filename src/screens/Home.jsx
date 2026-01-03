@@ -7,7 +7,7 @@ import { Color } from '../../library/colors'
 import { logout } from '../utils/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { s } from 'react-native-size-matters'
-import { handleHistorico } from '../utils/handleHistorico'
+import { getHistoricoByPartnerId } from '../utils/getHistoricoByPartnerId'
 
 const cards = [
   {
@@ -59,7 +59,11 @@ const Home = ({ navigation }) => {
               item.text != 'Histórico' ? (
                 () => navigation.navigate(item.text)
               ) : (
-                () => handleHistorico(partner_id)
+                partner_id == 128610 ? (
+                  () => navigation.navigate('Historico') // só pode ser acessado pelos admins
+                ) : (
+                  () => getHistoricoByPartnerId(partner_id)
+                )
               )
             }
           />
