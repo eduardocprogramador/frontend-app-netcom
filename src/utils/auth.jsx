@@ -11,9 +11,9 @@ export async function login(matricula, senha, navigation, dispatch, setLoading) 
   setLoading(true)
   try {
     const { data } = await api.post('/app/login', { matricula, senha })
-    const { uid, partner_id } = data
+    const { uid, partner_id, admin } = data
     if (uid) {
-      dispatch(setUserData({ uid, partner_id }))
+      dispatch(setUserData({ uid, partner_id, admin }))
       navigation.replace('Screens')
       return true
     }

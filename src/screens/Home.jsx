@@ -39,6 +39,7 @@ const cards = [
 const Home = ({ navigation }) => {
   const dispatch = useDispatch()
   const partner_id = useSelector(state => state.userReducer.userData?.partner_id)
+  const admin = useSelector(state => state.userReducer.userData?.admin)
   return (
     <SafeAreaView style={bs('container')}>
       <Btn style={bs('w-25', 'ms-auto')} childrenStyle={{ fontSize: s(10) }} color={Color.danger} onPress={() => logout(navigation, dispatch)}>Sair</Btn>
@@ -53,16 +54,16 @@ const Home = ({ navigation }) => {
             icon={item.icon}
             color={item.color}
             // Avisos desabilitados por enquanto
-            disabled={item.text == 'Avisos (Em Breve)'}
+            disabled={item.text === 'Avisos (Em Breve)'}
             onPress={
               // se for Histórico chama a função handleHistorico
               item.text != 'Histórico' ? (
                 () => navigation.navigate(item.text)
               ) : (
-                partner_id == 128610 ? (
+                admin ? (
                   () => navigation.navigate('Historico') // só pode ser acessado pelos admins
                 ) : (
-                  () => getHistoricoByPartnerId(partner_id)
+                  () => getHistoricoByPartnerId(partner_id) // pega o histórico do aluno logado
                 )
               )
             }
